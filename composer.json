@@ -1,0 +1,21 @@
+{
+  "name": "gw/gw_oxid_delivery_more_info",
+  "description": "Get",
+  "type": "oxideshop-module",
+  "extra": {
+    "oxideshop": {
+      "blacklist-filter": [
+        "documentation/**/*.*"
+      ],
+      "target-directory": "gw/gw_oxid_delivery_more_info"
+    }
+  },
+  "require": {
+    "php": ">=7.1"
+  },
+  "autoload": {
+    "psr-4": {
+      "gw\\gw_oxid_delivery_more_info\\": "./"
+    }
+  }
+}

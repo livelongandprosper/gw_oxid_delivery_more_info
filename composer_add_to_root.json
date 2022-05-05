@@ -1,0 +1,5 @@
+"autoload": {
+  "psr-4": {
+    "gw\\gw_oxid_delivery_more_info\\" : "./source/modules/gw/gw_oxid_delivery_more_info"
+  }
+}
