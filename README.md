@@ -10,6 +10,7 @@ This module makes it possible to define additional mandatory fields when selecti
 
 - add content in composer_add_to_root.json to your global composer.json file and call composer dump-autoload
 - in TPL Application/views/zehaberlin/tpl/page/checkout/payment.tpl you have to add the Smarty block change_payment_form inside the form with the id payment
+- - example:
 ```
     <form action="[{$oViewConf->getSslSelfLink()}]" class="form-horizontal js-oxValidate payment-methods" id="payment" name="order" method="post" novalidate="novalidate">
         [{block name="change_payment_form"}][{/block}]
