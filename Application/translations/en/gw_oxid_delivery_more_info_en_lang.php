@@ -13,4 +13,6 @@ $aLang = array(
 	'GW_ERROR_oxuser__oxstateid' => 'In order to ship your order, we need to know your state.',
 	'GW_ERROR_oxuser__oxfon' => 'To be able to ship your order, we need your phone number.',
 
+	'GW_UPDATE_ADDITIONAL_MANDATORY_FIELDS' => 'Submit Info',
+
 );

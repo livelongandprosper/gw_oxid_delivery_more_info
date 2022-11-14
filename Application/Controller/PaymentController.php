@@ -36,53 +36,16 @@ class PaymentController extends PaymentController_parent {
 		$parent_return = parent::validatePayment();
 		$additionalDeliveryInfosSubmitted = \OxidEsales\Eshop\Core\Registry::getConfig()->getRequestParameter("additionalDeliveryFields");
 		$sActShipSet = \OxidEsales\Eshop\Core\Registry::getSession()->getVariable('sShipSet');
-		$oActiveShopSet = oxNew(\OxidEsales\Eshop\Application\Model\DeliverySet::class);
-		$oActiveShopSet->load($sActShipSet);
-		$neededAdditionalDeliveryInfos = $oActiveShopSet->getAdditionalMandatoryFields();
+		$oActiveShipSet = oxNew(\OxidEsales\Eshop\Application\Model\DeliverySet::class);
+		$oActiveShipSet->load($sActShipSet);
+		$neededAdditionalDeliveryInfos = $oActiveShipSet->getAdditionalMandatoryFields();
 		$sDelAddressId = \OxidEsales\Eshop\Core\Registry::getSession()->getVariable('deladrid');
 
-		if(count($neededAdditionalDeliveryInfos) > 0) {
-			$hasErrors = false;
-			$oUser = $this->getUser();
-
-			foreach($neededAdditionalDeliveryInfos as $neededAdditionalDeliveryInfo) {
-				$neededAdditionalDeliveryInfoKey = ($sDelAddressId?'oxaddress__':'oxuser__').$neededAdditionalDeliveryInfo;
-				if(!$additionalDeliveryInfosSubmitted[$neededAdditionalDeliveryInfoKey] && $neededAdditionalDeliveryInfo != 'oxstateid') {
-					\OxidEsales\Eshop\Core\Registry::getUtilsView()->addErrorToDisplay('GW_ERROR_'.$neededAdditionalDeliveryInfoKey);
-					$hasErrors = true;
-				} elseif($neededAdditionalDeliveryInfo == 'oxstateid') {
-					$oCountry = oxNew(\OxidEsales\Eshop\Application\Model\Country::class);
-					$sCountryId = "";
-					if($sDelAddressId) {
-						$oDelAddress = oxNew(\OxidEsales\Eshop\Application\Model\Address::class);
-						$oDelAddress->setId($sDelAddressId);
-						$oDelAddress->load($sDelAddressId);
-						$sCountryId = $oDelAddress->oxaddress__oxcountryid->value;
-					} else {
-						$sCountryId = $oUser->oxuser__oxcountryid->value;
-					}
-					$oCountry->load($sCountryId);
-					if(count($oCountry->getStates()) > 0 && !$additionalDeliveryInfosSubmitted[$neededAdditionalDeliveryInfoKey]) {
-						\OxidEsales\Eshop\Core\Registry::getUtilsView()->addErrorToDisplay('GW_ERROR_'.$neededAdditionalDeliveryInfoKey);
-						$hasErrors = true;
-					}
-				}
-			}
-			if($hasErrors) {
+		if($oActiveShipSet->hasAddtionalMandatoryFields()) {
+			if(!$oActiveShipSet->areAdditionalFieldsValid($additionalDeliveryInfosSubmitted, (string)$sDelAddressId)) {
 				return;
 			} else {
-				if($sDelAddressId) {
-					// Delivery address
-					$oDelAddress = oxNew(\OxidEsales\Eshop\Application\Model\Address::class);
-					$oDelAddress->setId($sDelAddressId);
-					$oDelAddress->load($sDelAddressId);
-					$oDelAddress->assign($additionalDeliveryInfosSubmitted);
-					$oDelAddress->save();
-				} else {
-					// Billing address
-					$oUser->assign($additionalDeliveryInfosSubmitted);
-					$oUser->save();
-				}
+				$oActiveShipSet->updateAddressInfo($additionalDeliveryInfosSubmitted, (string)$sDelAddressId);
 			}
 		}
 		return $parent_return;

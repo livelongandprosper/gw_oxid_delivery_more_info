@@ -13,4 +13,6 @@ $aLang = array(
 	'GW_ERROR_oxuser__oxstateid' => 'Um Deine Bestellung versenden zu können, benötigen wir die Angabe Deines Bundeslandes.',
 	'GW_ERROR_oxuser__oxfon' => 'Um Deine Bestellung versenden zu können, benötigen wir die Angabe Deiner Telefonnummer.',
 
+	'GW_UPDATE_ADDITIONAL_MANDATORY_FIELDS' => 'Informationen absenden',
+
 );
